@@ -21,39 +21,39 @@ namespace dotnet_mongodb_zoologico.Controllers
         }
 
         [HttpPost]
-        public ActionResult SalvarInfectado([FromBody] LeaoDto dto)
+        public ActionResult AdicionarLeao([FromBody] LeaoDto dto)
         {
-            var leao = new Leao(dto.nome, dto.sexo, dto.idade, dto.peso, dto.pelagem);
+            if(dto.nome.ToLower()[0] != 'j') return StatusCode(400, "Nome não permitido");
 
+            var leao = new Leao(dto.nome, dto.sexo, dto.idade, dto.peso, dto.pelagem);
             _leaoCollection.InsertOne(leao);
             
-            return StatusCode(201, "Leao adicionado com sucesso");
+            return StatusCode(201, "Leão adicionado com sucesso");
         }
 
         [HttpGet]
-        public ActionResult ObterInfectados()
+        public ActionResult ObterLeoes()
         {
             var leoes = _leaoCollection.Find(Builders<Leao>.Filter.Empty).ToList();
             
             return Ok(leoes);
         }
 
-
-        // [HttpPut]
-        // public ActionResult AtualizarInfectado([FromBody] LeaoDto dto)
-        // {
-        //     _leaoCollection.UpdateOne(Builders<Leao>.Filter.Where(_ => _.DataNascimento == dto.DataNascimento), Builders<Leao>.Update.Set("sexo", dto.Sexo));
+        [HttpPut]
+        public ActionResult AtualizarPesoLeao([FromBody] LeaoDto dto)
+        {
+            _leaoCollection.UpdateOne(Builders<Leao>.Filter.Where(_ => _.nome == dto.nome), Builders<Leao>.Update.Set("peso", dto.peso));
             
-        //     return StatusCode(201, "Infectado atualizado com sucesso");
-        // }
+            return StatusCode(201, "Peso de " + dto.nome + " atualizado com sucesso");
+        }
 
-        // [HttpDelete("{dataNasc}")]
-        // public ActionResult ApagarInfectado(DateTime dataNasc)
-        // {
-        //     _leaoCollection.DeleteOne(Builders<Leao>.Filter.Where(_ => _.DataNascimento == dataNasc));
+        [HttpDelete]
+        public ActionResult ApagarLeao([FromBody] LeaoDto dto)
+        {
+            _leaoCollection.DeleteOne(Builders<Leao>.Filter.Where(_ => _.nome == dto.nome));
             
-        //     return Ok("Deletado com sucesso");
-        // }
+            return Ok("Leão deletado com sucesso");
+        }
         
     }
 

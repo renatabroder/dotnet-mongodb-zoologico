@@ -21,8 +21,10 @@ namespace dotnet_mongodb_zoologico.Controllers
         }
 
         [HttpPost]
-        public ActionResult SalvarCobra([FromBody] CobraDto dto)
+        public ActionResult AdicionarCobra([FromBody] CobraDto dto)
         {
+            if(dto.nome.ToLower()[0] != 'j') return StatusCode(400, "Nome não permitido");
+
             var cobra = new Cobra(dto.nome, dto.sexo, dto.idade, dto.peso, dto.especie, dto.venenosa);
             _cobraCollection.InsertOne(cobra);
             
@@ -45,13 +47,21 @@ namespace dotnet_mongodb_zoologico.Controllers
             return StatusCode(201, "Peso de " + dto.nome + " atualizado com sucesso");
         }
 
-        [HttpDelete("{nome}")]
-        public ActionResult ApagarCobra(string nome)
+        [HttpDelete]
+        public ActionResult ApagarCobra([FromBody] CobraDto dto)
         {
-            _cobraCollection.DeleteOne(Builders<Cobra>.Filter.Where(_ => _.nome == nome));
+            _cobraCollection.DeleteOne(Builders<Cobra>.Filter.Where(_ => _.nome == dto.nome));
             
             return Ok("Cobra deletada com sucesso");
         }
+
+        // [HttpDelete("{nome}")]
+        // public ActionResult ApagarCobra(string nome)
+        // {
+        //     _cobraCollection.DeleteOne(Builders<Cobra>.Filter.Where(_ => _.nome == nome));
+            
+        //     return Ok("Cobra deletada com sucesso");
+        // }
         
     }
 

@@ -21,39 +21,39 @@ namespace dotnet_mongodb_zoologico.Controllers
         }
 
         [HttpPost]
-        public ActionResult SalvarInfectado([FromBody] GorilaDto dto)
+        public ActionResult AdicionarGorila([FromBody] GorilaDto dto)
         {
-            var gorila = new Gorila(dto.nome, dto.sexo, dto.idade, dto.peso);
+            if(dto.nome.ToLower()[0] != 'j') return StatusCode(400, "Nome não permitido");
 
+            var gorila = new Gorila(dto.nome, dto.sexo, dto.idade, dto.peso);
             _gorilaCollection.InsertOne(gorila);
             
             return StatusCode(201, "Gorila adicionado com sucesso");
         }
 
         [HttpGet]
-        public ActionResult ObterInfectados()
+        public ActionResult ObterGorilas()
         {
             var gorilas = _gorilaCollection.Find(Builders<Gorila>.Filter.Empty).ToList();
             
             return Ok(gorilas);
         }
 
-
-        // [HttpPut]
-        // public ActionResult AtualizarInfectado([FromBody] GorilaDto dto)
-        // {
-        //     _gorilaCollection.UpdateOne(Builders<Gorila>.Filter.Where(_ => _.DataNascimento == dto.DataNascimento), Builders<Gorila>.Update.Set("sexo", dto.Sexo));
+        [HttpPut]
+        public ActionResult AtualizarPesoGorila([FromBody] GorilaDto dto)
+        {
+            _gorilaCollection.UpdateOne(Builders<Gorila>.Filter.Where(_ => _.nome == dto.nome), Builders<Gorila>.Update.Set("peso", dto.peso));
             
-        //     return StatusCode(201, "Infectado atualizado com sucesso");
-        // }
+            return StatusCode(201, "Peso de " + dto.nome + " atualizado com sucesso");
+        }
 
-        // [HttpDelete("{dataNasc}")]
-        // public ActionResult ApagarInfectado(DateTime dataNasc)
-        // {
-        //     _gorilaCollection.DeleteOne(Builders<Gorila>.Filter.Where(_ => _.DataNascimento == dataNasc));
+        [HttpDelete]
+        public ActionResult ApagarGorila([FromBody] GorilaDto dto)
+        {
+            _gorilaCollection.DeleteOne(Builders<Gorila>.Filter.Where(_ => _.nome == dto.nome));
             
-        //     return Ok("Deletado com sucesso");
-        // }
+            return Ok("Gorila deletada com sucesso");
+        }
         
     }
 
