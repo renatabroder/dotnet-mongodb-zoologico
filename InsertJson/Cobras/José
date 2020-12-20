@@ -1,0 +1,8 @@
+{
+    "nome": "José",
+    "sexo": "M",
+    "idade": "4",
+    "peso": 3.6,
+    "especie": "Píton",
+    "venenosa": true
+}
