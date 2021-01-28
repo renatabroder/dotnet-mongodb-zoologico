@@ -52,10 +52,7 @@ Iniciar a API com o comando
 
 Com a aplicação rodando, faça a requisição para http://localhost:5000.
 
-Utilize /*(animal)* a depender do animal desejado.
-As opções para *(animal)* são [cobra, leao, gorila]
-
-Com a API é possível:
+## Requisições
  - Inserir novos animais de uma determinada espécie utilizando **POST** ;
  - Buscar todos os animais de uma determinada espécie utilizando **GET**;
  - Editar o peso de um animal, ao filtrar pelo seu nome, utilizando **PUT**;
@@ -63,3 +60,56 @@ Com a API é possível:
 
 
 **IMPORTANTE: as informações sempre devem estar no corpo da requisição.**
+
+
+Utilize /animal a depender do animal desejado.
+As opções para animal são [cobra, leao, gorila]
+
+## Exemplos:
+
+### GET
+
+    GET http://localhost:5000/cobra
+
+irá buscar todas as cobras registradas
+
+
+### POST
+
+    POST http://localhost:5000/cobra
+    
+    {
+         "nome": "Jacyra",
+         "sexo": "F",
+         "idade": "2",
+         "peso": 12.67,
+         "especie": "Jibóia",
+         "venenosa": false
+     }
+
+irá inserir uma cobra de nome Jacyra
+
+
+### PUT
+
+    PUT http://localhost:5000/cobra
+    
+    {
+         "nome": "Jacyra",
+         "peso": 15.50,
+         "especie": "Jibóia",
+         "venenosa": false
+     }
+
+irá alterar o peso de Jacyra de 12.67 para 15.50
+
+
+### PUT
+
+    PUT http://localhost:5000/cobra
+    
+    {
+         "nome": "Jacyra",
+     }
+
+irá deletar o registro de Jacyra
